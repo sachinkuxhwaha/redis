@@ -42,7 +42,31 @@ src/
 └── subscriber.js   → Subscriber (Listens for messages)
 ```
 
-## 3. subscriber.js — Receive messages
+## 3. Running Publisher and Subscriber Separately
+
+Redis Pub/Sub requires the publisher and subscriber to run as separate processes.
+
+Open two separate terminals in the project directory.
+
+**Terminal 1 — Start Subscriber**
+
+```bash
+npm run subscriber
+```
+
+The subscriber connects to Redis and listens for messages on the `notifications` channel.
+
+**Terminal 2 — Start Publisher (API)**
+
+```bash
+npm run api
+```
+
+The Express API starts on `http://localhost:3000` and publishes notifications to Redis.
+
+**Important:** Keep both terminals running. Start the subscriber before sending a notification so it is already listening to the channel.
+
+## 4. subscriber.js — Receive messages
 
 ```js
 import Redis from "ioredis";
@@ -72,7 +96,7 @@ subscriber.on("message", (channel, message) => {
 5. **`message`:** Actual message received.
 6. **`JSON.parse(message)`:** Converts the JSON string back into a JavaScript object.
 
-## 4. api.js — Publish messages
+## 5. api.js — Publish messages
 
 ```js
 import express from "express";
@@ -114,7 +138,7 @@ app.listen(3000, () => {
 6. **`receivers`** → Number of subscribers that Redis reports as receiving the published message.
 7. **`res.json()`** → Sends the publishing result to the API client.
 
-## 5. Understanding the POST request
+## 6. Understanding the POST request
 
 Example:
 
@@ -147,7 +171,7 @@ Example API response:
 
 The number `2` means two active subscribers were listening to that channel when the message was published.
 
-## 6. Important Redis Pub/Sub commands
+## 7. Important Redis Pub/Sub commands
 
 | Command                   | Purpose                                |
 | ------------------------- | -------------------------------------- |
@@ -156,7 +180,7 @@ The number `2` means two active subscribers were listening to that channel when 
 | `UNSUBSCRIBE channel`     | Stops listening to a channel           |
 | `PSUBSCRIBE pattern`      | Listens to channels matching a pattern |
 
-## 7. Important limitations — Don't forget!
+## 8. Important limitations — Don't forget!
 
 Redis Pub/Sub is designed for real-time messaging, not reliable job processing.
 
@@ -171,7 +195,7 @@ Redis Pub/Sub is designed for real-time messaging, not reliable job processing.
 
 **Important:** A message being received does not mean the subscriber successfully completed its business logic.
 
-## 8. Pub/Sub vs BullMQ vs Redis Lists
+## 9. Pub/Sub vs BullMQ vs Redis Lists
 
 | Feature                  | Pub/Sub             | BullMQ                   | Redis Lists (basic demo) |
 | ------------------------ | ------------------- | ------------------------ | ------------------------ |

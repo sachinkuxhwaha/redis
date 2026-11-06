@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node src/index.js"
+    "api": "node src/api.js",
+    "subscriber": "node src/subscriber.js"
   },
   "dependencies": {
     "express": "^5.3.0",
