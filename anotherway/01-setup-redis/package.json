@@ -1,0 +1,14 @@
+{
+  "name": "01-setup-redis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Sachin",
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^6.3.1"
+  }
+}
