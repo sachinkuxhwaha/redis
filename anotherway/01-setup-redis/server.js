@@ -3,6 +3,18 @@ const redis = require("redis");
 const client = redis.createClient({
   host: "localhost",
   port: 6379,
+  socket: {
+    reconnectStrategy: (retries) => {
+      // retries counts the number of reconnection attempts.
+      if (retries >= 5) {
+        // Returning an Error stops further reconnection attempts.
+        return new Error("Max Redis reconnection retries reached");
+      }
+
+      // Wait 1000 milliseconds (1 second) before the next retry.
+      return 1000;
+    },
+  },
 });
 
 client.on("error", (error) =>
@@ -35,8 +47,14 @@ async function testRedisConnection() {
     console.log(decrementCount);
   } catch (error) {
     console.log(error);
+
+    // Set the process exit status to 1 to indicate failure.
+    // Node.js can still execute pending cleanup operations.
+    process.exitCode = 1;
   } finally {
-    await client.quit();
+    if (client.isOpen) {
+      await client.quit();
+    }
   }
 }
 
