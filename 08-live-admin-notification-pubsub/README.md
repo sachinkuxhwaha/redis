@@ -1,5 +1,7 @@
 # 08 — Build Pub/Sub with Redis
 
+![Redis Pub/Sub Project](./src/assets/image.png)
+
 ## 1. What is Redis Pub/Sub?
 
 **Pub/Sub (Publish–Subscribe)** is a messaging mechanism in which a publisher sends messages to a channel and all active subscribers listening to that channel receive them.
