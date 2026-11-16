@@ -5,13 +5,11 @@ const client = redis.createClient({
   port: 6379,
   socket: {
     reconnectStrategy: (retries) => {
-      // retries counts the number of reconnection attempts.
+      // Maximum 5 reconnection attempts.
       if (retries >= 5) {
-        // Returning an Error stops further reconnection attempts.
         return new Error("Max Redis reconnection retries reached");
       }
-
-      // Wait 1000 milliseconds (1 second) before the next retry.
+      // Retry after 1 second.
       return 1000;
     },
   },
@@ -26,28 +24,33 @@ async function testRedisConnection() {
     await client.connect();
     console.log("Connected to Redis");
 
+    // SET: Store a key-value pair.
     await client.set("name", "sachin");
 
+    // GET: Retrieve the value.
     const extractValue = await client.get("name");
-
     console.log("Extracted value:", extractValue);
 
+    // DEL: Delete a key.
     const deleteCount = await client.del("name");
     console.log("Deleted count:", deleteCount);
 
+    // GET: Check the deleted key.
     const extractUpdatedValue = await client.get("name");
     console.log("updaetd value:", extractUpdatedValue);
 
+    // Store a numeric value.
     await client.set("count", "100");
 
+    // INCR: Increment the value by 1.
     const incremnentCount = await client.incr("count");
     console.log(incremnentCount);
 
+    // DECR: Decrement the value by 1.
     const decrementCount = await client.decr("count");
     console.log(decrementCount);
-  } catch (error) {
-    console.log(error);
-
+  } catch (e) {
+    console.error(e);
     // Set the process exit status to 1 to indicate failure.
     // Node.js can still execute pending cleanup operations.
     process.exitCode = 1;

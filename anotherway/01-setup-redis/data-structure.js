@@ -146,7 +146,7 @@ async function redisDataStructure() {
     await client.hDel("product:101", "rating");
     console.log("After Deletion:", await client.hGetAll("product:101"));
   } catch (e) {
-    console.log(e);
+    console.error(e);
   } finally {
     if (client.isOpen) {
       await client.quit();
